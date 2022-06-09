@@ -14,15 +14,29 @@ public class Tweet {
     public String body;
     public String createdAt;
     public User user;
+    public String id;
+    public String pic_url;
 
     public Tweet() {}
 
     public static Tweet fromJson(JSONObject jsonObject) throws JSONException {
-
         Tweet tweet = new Tweet();
-        tweet.body = jsonObject.getString("text");
+        if(jsonObject.has("full_text")) {
+            // extended must be true
+            tweet.body = jsonObject.getString("full_text");
+        } else {
+            // extended must be false
+            tweet.body = jsonObject.getString("text");
+        }
         tweet.createdAt = jsonObject.getString("created_at");
         tweet.user = User.fromJson(jsonObject.getJSONObject("user"));
+        tweet.id = jsonObject.getString("id_str");
+        if (jsonObject.getJSONObject("entities").has("media")) {
+            tweet.pic_url = jsonObject.getJSONObject("entities").getJSONArray("media").getJSONObject(0).getString("media_url_https");
+        }
+        else {
+            tweet.pic_url = "none";
+        }
 
         return tweet;
     }

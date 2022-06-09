@@ -21,6 +21,8 @@ import okhttp3.Headers;
 public class ComposeActivity extends AppCompatActivity {
 
     public static final String TAG = "ComposeActivity";
+    public static final String INTENT_NAME = "tweet";
+    public static final String COMPOSE_EMPTY = "Sorry, your tweet cannot be empty!";
     public static final int MAX_TWEET_LENGTH = 140;
 
     TwitterClient client;
@@ -44,12 +46,12 @@ public class ComposeActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String tweetContent = etCompose.getText().toString();
                 if (tweetContent.isEmpty()) {
-                Toast.makeText(ComposeActivity.this, "Sorry, your tweet cannot be empty!", Toast.LENGTH_LONG ).show();
+                Toast.makeText(ComposeActivity.this, COMPOSE_EMPTY, Toast.LENGTH_LONG ).show();
                 return;
                 }
 
                 else if (tweetContent.length() > MAX_TWEET_LENGTH) {
-                    Toast.makeText(ComposeActivity.this, "Sorry, your tweet is too long!", Toast.LENGTH_LONG ).show();
+                    Toast.makeText(ComposeActivity.this, COMPOSE_EMPTY, Toast.LENGTH_LONG ).show();
                     return;
                 }
 
@@ -65,7 +67,7 @@ public class ComposeActivity extends AppCompatActivity {
                             Log.e(TAG, "published tweet says " + tweet.body);
 
                             Intent intent = new Intent();
-                            intent.putExtra("tweet", Parcels.wrap(tweet));
+                            intent.putExtra(INTENT_NAME, Parcels.wrap(tweet));
                             setResult(RESULT_OK, intent);
                             finish();
 

@@ -69,21 +69,43 @@
         android:id="@+id/tvFavoriteCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="2dp"
         app:layout_constraintStart_toEndOf="@+id/ibFavorite"
         app:layout_constraintTop_toTopOf="@+id/ibFavorite"
         tools:text="0" />
 
     <ImageButton
         android:id="@+id/ibFavorite"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginStart="108dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="60dp"
+        android:background="@drawable/ic_vector_heart_stroke"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/entity"
-        app:srcCompat="@android:drawable/btn_star_big_off"
         tools:ignore="SpeakableTextPresentCheck" />
+
+    <ImageButton
+        android:id="@+id/ibReply"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="60dp"
+        android:background="@drawable/ic_twitter_reply"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tvFavoriteCount"
+        app:layout_constraintTop_toBottomOf="@+id/entity"
+        tools:ignore="SpeakableTextPresentCheck" />
+
+    <TextView
+        android:id="@+id/tvReplyCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="2dp"
+        android:text="8"
+        app:layout_constraintStart_toEndOf="@+id/ibReply"
+        app:layout_constraintTop_toBottomOf="@+id/entity"
+        tools:text="0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

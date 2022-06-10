@@ -35,9 +35,7 @@ The following **optional** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
-<img src='https://gifyu.com/image/SHhuS' title='myTwitterAppGif' width='' alt='Twitter App Gif' />
-
-GIF created with [Kap](https://getkap.co/).
+![App Demo Link](screenshots/submissionTwo.gif)
 
 ## Notes
 

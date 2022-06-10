@@ -2,7 +2,9 @@ package com.codepath.apps.restclienttemplate;
 
 import static com.facebook.stetho.inspector.network.ResponseHandlingInputStream.TAG;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.icu.text.SimpleDateFormat;
 import android.os.Build;
 import android.text.format.DateUtils;
@@ -23,10 +25,13 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.codepath.apps.restclienttemplate.models.Tweet;
+import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
 import java.text.ParseException;
 import java.util.List;
 import java.util.Locale;
+
+import okhttp3.Headers;
 
 public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder> {
     Context context;
@@ -110,6 +115,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
 
         }
 
+        @SuppressLint({"CheckResult", "SetTextI18n"})
         @RequiresApi(api = Build.VERSION_CODES.N)
         public void bind(Tweet tweet) {
             RequestOptions requestOptionsPI = new RequestOptions();
@@ -121,6 +127,8 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             tvScreenName.setText("@" + tweet.user.screenName);
             tvFullName.setText(tweet.user.name);
             tvCreatedAt.setText("· " + getRelativeTimeAgo(tweet.createdAt));
+            tvFavoriteCount.setText(String.valueOf(tweet.favoriteCount));
+
             Glide.with(context).load(tweet.user.profileImageUrl).apply(requestOptionsPI).into(ivProfileImage);
             if (!tweet.pic_url.equals("none")) {
                 entity.setVisibility(View.VISIBLE);
@@ -134,14 +142,51 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                 @Override
                 public void onClick(View view) {
                     // if not already favorited
+                    if (!tweet.isFavorited) {
                         // tell Twitter I favorite this
-                        // change the drawable
+                        TwitterApp.getRestClient(context).favorite(tweet.id, new JsonHttpResponseHandler() {
+                            @Override
+                            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                                Log.i("adapter", "This should've been favorited!");
+                            }
 
+                            @Override
+                            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                                Log.i("adapter", "Failure to favorite.");
+                            }
+                        });
+                        // change the drawable
+                        Drawable newImage = context.getDrawable(android.R.drawable.btn_star_big_on);
+                        ibFavorite.setImageDrawable(newImage);
                         // increment the text inside tvFavoriteCount
-                    // else if already Favorited
+                        tvFavoriteCount.setText(String.valueOf(++tweet.favoriteCount));
+                        tweet.isFavorited = true;
+
+
+                    }
+                    else {
+                        // else if already Favorited
+                        Drawable newImage = context.getDrawable(android.R.drawable.btn_star_big_off);
                         // tell Twitter we want to unfavorite this
-                        // change the drawable back to btn_star_big_off
+                        TwitterApp.getRestClient(context).unfavorite(tweet.id, new JsonHttpResponseHandler() {
+                            @Override
+                            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                                Log.i("adapter", "This should've been unfavorited!");
+                            }
+
+                            @Override
+                            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                                Log.i("adapter", "Failure to unfavorite");
+                            }
+                        });
+
                         // decrement the text inside the tvFavoriteCount
+                        tvFavoriteCount.setText(String.valueOf(--tweet.favoriteCount));
+                        // change the drawable back to btn_star_big_off
+                        ibFavorite.setImageDrawable(newImage);
+                        tweet.isFavorited = false;
+
+                    }
                 }
             });
         }

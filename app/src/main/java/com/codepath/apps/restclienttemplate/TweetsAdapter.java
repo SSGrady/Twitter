@@ -128,6 +128,15 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             tvFullName.setText(tweet.user.name);
             tvCreatedAt.setText("· " + getRelativeTimeAgo(tweet.createdAt));
             tvFavoriteCount.setText(String.valueOf(tweet.favoriteCount));
+            if (tweet.isFavorited) {
+                Drawable newImage = context.getDrawable(android.R.drawable.btn_star_big_on);
+                ibFavorite.setImageDrawable(newImage);
+            }
+            else {
+                Drawable newImage = context.getDrawable(android.R.drawable.btn_star_big_off);
+                ibFavorite.setImageDrawable(newImage);
+            }
+
 
             Glide.with(context).load(tweet.user.profileImageUrl).apply(requestOptionsPI).into(ivProfileImage);
             if (!tweet.pic_url.equals("none")) {

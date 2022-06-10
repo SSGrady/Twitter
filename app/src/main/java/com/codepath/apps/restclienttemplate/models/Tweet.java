@@ -17,6 +17,7 @@ public class Tweet {
     public String id;
     public String pic_url;
 
+
     public Tweet() {}
 
     public static Tweet fromJson(JSONObject jsonObject) throws JSONException {

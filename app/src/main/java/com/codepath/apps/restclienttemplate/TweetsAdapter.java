@@ -88,6 +88,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         TextView tvScreenName;
         ImageView entity;
         TextView tvFullName;
+        TextView tvCreatedAt;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -96,13 +97,16 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             tvScreenName = itemView.findViewById(R.id.tvScreenName);
             entity = itemView.findViewById(R.id.entity);
             tvFullName = itemView.findViewById(R.id.tvFullName);
+            tvCreatedAt = itemView.findViewById(R.id.created_at);
 
         }
 
+        @RequiresApi(api = Build.VERSION_CODES.N)
         public void bind(Tweet tweet) {
             tvBody.setText(tweet.body);
             tvScreenName.setText("@" + tweet.user.screenName);
             tvFullName.setText(tweet.user.name);
+            tvCreatedAt.setText(getRelativeTimeAgo(tweet.createdAt));
             Glide.with(context).load(tweet.user.profileImageUrl).into(ivProfileImage);
             if (!tweet.pic_url.equals("none")) {
                 entity.setVisibility(View.VISIBLE);
@@ -140,7 +144,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                     return diff / DAY_MILLIS + " d";
                 }
             } catch (ParseException e) {
-                Log.i(TAG, "getRelativeTimeAgo failed");
+                Log.i("error", "getRelativeTimeAgo failed");
                 e.printStackTrace();
             }
 

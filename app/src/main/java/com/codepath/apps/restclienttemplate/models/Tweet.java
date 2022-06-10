@@ -19,6 +19,8 @@ public class Tweet {
     public boolean isFavorited;
     public boolean isRetweeted;
     public int favoriteCount;
+    public String reply;
+    public int replyCount;
 
 
     public Tweet() {}
@@ -42,6 +44,8 @@ public class Tweet {
         tweet.isFavorited = jsonObject.getBoolean("favorited");
         tweet.isRetweeted = jsonObject.getBoolean("retweeted");
         tweet.favoriteCount = jsonObject.getInt("favorite_count");
+        // tweet.replyCount = jsonObject.getInt("reply_count");
+
         if (jsonObject.getJSONObject("entities").has("media")) {
             tweet.pic_url = jsonObject.getJSONObject("entities").getJSONArray("media").getJSONObject(0).getString("media_url_https");
         }

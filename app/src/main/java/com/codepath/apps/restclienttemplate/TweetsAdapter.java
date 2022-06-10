@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,6 +19,9 @@ import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 
 import java.text.ParseException;
@@ -44,6 +48,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         return new ViewHolder(view);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         // Get the data at position
@@ -89,6 +94,8 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         ImageView entity;
         TextView tvFullName;
         TextView tvCreatedAt;
+        ImageButton ibFavorite;
+        TextView tvFavoriteCount;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -98,23 +105,45 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             entity = itemView.findViewById(R.id.entity);
             tvFullName = itemView.findViewById(R.id.tvFullName);
             tvCreatedAt = itemView.findViewById(R.id.created_at);
+            ibFavorite = itemView.findViewById(R.id.ibFavorite);
+            tvFavoriteCount = itemView.findViewById(R.id.tvFavoriteCount);
 
         }
 
         @RequiresApi(api = Build.VERSION_CODES.N)
         public void bind(Tweet tweet) {
+            RequestOptions requestOptionsPI = new RequestOptions();
+            RequestOptions requestOptionsIMG = new RequestOptions();
+
+            requestOptionsPI.transform(new CenterCrop(), new RoundedCorners(68));
+            requestOptionsIMG.transform(new CenterCrop(), new RoundedCorners(40));
             tvBody.setText(tweet.body);
             tvScreenName.setText("@" + tweet.user.screenName);
             tvFullName.setText(tweet.user.name);
-            tvCreatedAt.setText(getRelativeTimeAgo(tweet.createdAt));
-            Glide.with(context).load(tweet.user.profileImageUrl).into(ivProfileImage);
+            tvCreatedAt.setText("· " + getRelativeTimeAgo(tweet.createdAt));
+            Glide.with(context).load(tweet.user.profileImageUrl).apply(requestOptionsPI).into(ivProfileImage);
             if (!tweet.pic_url.equals("none")) {
                 entity.setVisibility(View.VISIBLE);
-                Glide.with(context).load(tweet.pic_url).into(entity);
+                Glide.with(context).load(tweet.pic_url).apply(requestOptionsIMG).into(entity);
             }
             else {
                 entity.setVisibility(View.GONE);
             }
+
+            ibFavorite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // if not already favorited
+                        // tell Twitter I favorite this
+                        // change the drawable
+
+                        // increment the text inside tvFavoriteCount
+                    // else if already Favorited
+                        // tell Twitter we want to unfavorite this
+                        // change the drawable back to btn_star_big_off
+                        // decrement the text inside the tvFavoriteCount
+                }
+            });
         }
 
         @RequiresApi(api = Build.VERSION_CODES.N)
